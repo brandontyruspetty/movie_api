@@ -1,22 +1,23 @@
-const http = require('http');
- url = require('url');
- fs = require('fs')
+const http = require('http'),
+ url = require('url'),
+ fs = require('fs');
 
 http.createServer((request, response) => {
     let addr = request.url;
-    q = new URL(addr, true);
+    q = url.parse(request.url, true)
     filePath = '';
 
-    fs.appendFile('log.txt','URL: ' + addr + '\nTimestamp: ' + new Date() + '\n\n'), (err) => {
+    const logMessage = 'URL: ' + addr + '\nTimestamp: ' + new Date() + '\n\n'
+    fs.appendFile('log.txt', logMessage, (err) => {
         if (err) {
             console.log(err);
         } else {
             console.log('Added to log.');
         }
-    };
+    });
 
     if (q.pathname.includes('documentation')) {
-        filePath = (_dirname + '/documentation.html');
+        filePath = (__dirname + '/documentation.html');
     } else {
         filePath = 'index.html';
     }
@@ -25,10 +26,11 @@ http.createServer((request, response) => {
         if (err) {
             throw err;
         }
-    })
 
-    response.writeHead(200, { 'Content-Type': 'text/html' });
-    response.write(data);
-    response.end();
+        response.writeHead(200, { 'Content-Type': 'text/html' });
+        response.write(data);
+        response.end();
+    });
 
 }).listen(8080);
+console.log('My test server is running on Port 8080');
