@@ -1,24 +1,18 @@
 {
-  "name": "movie_api",
+  "name": "deltranquillo",
   "version": "1.0.0",
-  "description": "film noir movie repository",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/brandontyruspetty/movie_api.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/brandontyruspetty/movie_api/issues"
-  },
-  "homepage": "https://github.com/brandontyruspetty/movie_api#readme",
   "dependencies": {
     "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.26.0"
   }
 }
