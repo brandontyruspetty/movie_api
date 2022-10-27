@@ -1,4 +1,6 @@
 const express = require('express');
+morgan = require('morgan');
+
 const app = express();
 
 let myTopNoirMovies = [
@@ -53,6 +55,9 @@ let myTopNoirMovies = [
         writer: 'Andrew Kevin Walker',
     },
 ];
+//added morgan for logging requests
+app.use(morgan('common'));
+
 //Get Requests that return a text response
 app.get('/', (req, res) => {
     res.send('Welcome to my unusual and lesser known film noir favorites. Enjoy.');
