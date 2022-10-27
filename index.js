@@ -61,9 +61,10 @@ app.get('/', (req, res) => {
 app.get('/movies', (req, res) => {
     res.json(myTopNoirMovies);
 });
+//added express.static to access documentation.html
+app.use(express.static('public'));
+
 //added listener
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
 });
-//added express.static to access documentation.html
-app.use(express.static('public'));
