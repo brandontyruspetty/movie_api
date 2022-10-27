@@ -50,7 +50,6 @@ let myTopNoirMovies = [
     {
         title: 'Se7en',
         director: 'David Fincher',
-        writer: 'Andrew Kevin Walker'
-
+        writer: 'Andrew Kevin Walker',
     },
 ]
