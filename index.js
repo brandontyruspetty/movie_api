@@ -52,4 +52,12 @@ let myTopNoirMovies = [
         director: 'David Fincher',
         writer: 'Andrew Kevin Walker',
     },
-]
+];
+//Get Requests that return a text response
+app.get('/', (req, res) => {
+    res.send('Welcome to my unusual and lesser known film noir favorites. Enjoy.');
+});
+//Get requests that return a JSON of movie data
+app.get('/movies', (req, res) => {
+    res.json(myTopNoirMovies);
+});
