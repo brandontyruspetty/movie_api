@@ -66,10 +66,12 @@ app.use(morgan('common'));
 app.get('/', (req, res) => {
     res.send('Welcome to my unusual and lesser known film noir favorites. Enjoy.');
 });
+
 //Get requests that return a JSON of movie data
-app.get('/movies', (req, res) => {
-    res.send(myTopNoirMovies);
-});
+//app.get('/movies', (req, res) => {
+    //res.send(myTopNoirMovies);
+//});
+
 //REST Requests/Responses
 app.get('/movies', (req, res)=> {
     res.send('Successful GET request returning data on all movies')
