@@ -1,5 +1,9 @@
 const express = require('express');
 morgan = require('morgan');
+bodyParser = require('bodyParser');
+uuid = require('uuid');
+
+app.use(bodyParser.json());
 
 const app = express();
 
@@ -64,8 +68,45 @@ app.get('/', (req, res) => {
 });
 //Get requests that return a JSON of movie data
 app.get('/movies', (req, res) => {
-    res.json(myTopNoirMovies);
+    res.send(myTopNoirMovies);
 });
+//REST Requests/Responses
+app.get('/movies', (req, res)=> {
+    res.send('Successful GET request returning data on all movies')
+});
+app.get('/movie/:MovieName', (req, res) => {
+    res.send('Successful GET request returns data on a single movie by title to user')
+});
+app.get('/movies/genre/:GenreName', (req, res) => {
+    res.send('Successful GET request returns data on a specific genre by name')
+});
+app.get('/movies/:Director', (req, res) => {
+    res.send('Successful GET request returns data on a director by name')
+});
+app.post('/users', (req, res) => {
+    let newUser = req.body;
+    if (!newUser.name) {
+        const message = 'Missing "name" in request body';
+        res.status(400).send(message);
+    } else {
+        new newUser.id = uuid.v4();
+       users.push(newUser);
+       res.status(201).send(message)
+        }
+    });
+app.put('/users/:UserName', (req, res) => {
+    res.send('Successful PUT request allows users to update their user info')
+});
+app.post('/users/:UserName/movie/:MovieName', (req, res) => {
+    res.send('Successful POST request returns data on user and movie added to list')
+});
+app.delete('/users/:Username/movies/:MovieName', (req, res) => {
+    res.send('Successful DELETE request returns a text alerting user movie has been removed from list')
+});
+app.delete('/users/:UserName/:ID', (req, res) => {
+    res.send('Successful DELETE request sends text alerting user their account has been deleted')
+});
+
 //added express.static to access documentation.html
 app.use(express.static('public'));
 
