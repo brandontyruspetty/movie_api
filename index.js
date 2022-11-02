@@ -1,11 +1,11 @@
 const express = require('express');
 morgan = require('morgan');
-bodyParser = require('bodyParser');
+bodyParser = require('body-parser');
 uuid = require('uuid');
 
-app.use(bodyParser.json());
-
 const app = express();
+
+app.use(bodyParser.json());
 
 let myTopNoirMovies = [
     {
