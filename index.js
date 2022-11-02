@@ -51,7 +51,7 @@ let myTopNoirMovies = [
     {
        title: 'Croupier',
        director: 'Mike Hodges',
-       writer: 'Paul Mayersberg' 
+       writer: 'Paul Mayersberg', 
     },
     {
         title: 'Se7en',
@@ -73,7 +73,7 @@ app.get('/', (req, res) => {
 //});
 
 //REST Requests/Responses
-app.get('/movies', (req, res)=> {
+app.get('/movies', (req, res) => {
     res.send('Successful GET request returning data on all movies')
 });
 app.get('/movie/:MovieName', (req, res) => {
@@ -91,7 +91,7 @@ app.post('/users', (req, res) => {
         const message = 'Missing "name" in request body';
         res.status(400).send(message);
     } else {
-        new newUser.id = uuid.v4();
+    newUser.id = uuid.v4();
        users.push(newUser);
        res.status(201).send(message)
         }
