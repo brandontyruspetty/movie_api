@@ -14,5 +14,32 @@
         Film Noir genre as well as create a profile for themselves 
         and create lists of their favorite movies.
         </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Request</th>
+                    <th>URL</th>
+                    <th>HTTP Method</th>
+                    <th>Response Body Data Format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Return a list of ALL movies to the user</td>
+                    <td>/movies</td>
+                    <td>GET</td>
+                    <td>A JSON object holding data about ALL the Movies</td>
+                </tr>
+                <tr>
+                    <td>Return data about a single movies by title to the user</td>
+                    <td>/movies/[Name]</td>
+                    <td>GET</td>
+                    <td>A JSON object holdiong data about a single movie containing a description, genre, director and image URL</td>
+                </tr>
+                
+            </tbody>
+        </table>
     </body>
+
+
 </html>
