@@ -20,6 +20,8 @@
                     <th>Request</th>
                     <th>URL</th>
                     <th>HTTP Method</th>
+                    <th>Query Parameters</th>
+                    <th>Request Body Data Format</th>
                     <th>Response Body Data Format</th>
                 </tr>
             </thead>
@@ -28,54 +30,72 @@
                     <td>Return a list of ALL movies to the user</td>
                     <td>/movies</td>
                     <td>GET</td>
+                    <td>None</td>
+                    <td>None</td>
                     <td>A JSON object holding data about ALL the Movies</td>
                 </tr>
                 <tr>
                     <td>Return data about a single movies by title to the user</td>
                     <td>/movies/[MovieName]</td>
                     <td>GET</td>
+                    <td>:MovieName</td>
+                    <td>None</td>
                     <td>A JSON object holdiong data about a single movie containing a description, genre, director and image URL</td>
                 </tr>
                 <tr>
                     <td>Return data about a genre (description) by name (e.g., "Contemporary Noir")</td>
                     <td>/movie/[Genre]/[GenreName]</td>
                     <td>GET</td>
+                    <td>:GenreName</td>
+                    <td>None</td>
                     <td>A JSON object holding data (description) about a single Genre</td>
                 </tr>
                 <tr>
                     <td>Return data about a director (bio, birth year, death year) by name</td>
                     <td>/movies/[Director]</td>
                     <td>GET</td>
+                    <td>:Director</td>
+                    <td>None</td>
                     <td>A JSON object holding data (bio, birth year, death year) about a single Director</td>
                 </tr>
                 <tr>
                     <td>Allow new users to to register</td>
                     <td>/users</td>
                     <td>POST</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about new user, structured like this { "name" : "John/Jane Doe", "password" : "1234", "email" : "johndoe@email.com", "date of birth" : "21/03/0000"} </td>
                     <td>A JSON object holding data about new user, structured like this { "name" : "John/Jane Doe", "password" : "1234", "email" : "johndoe@email.com", "date of birth" : "21/03/0000"} including an ID</td>
                 </tr>
                 <tr>
                     <td>Allow users to update their user info (username, password, email, date of birth)</td>
                     <td>/users/[UserName]</td>
                     <td>PUT</td>
+                    <td>:UserName</td>
+                    <td>None</td>
                     <td>A text message indicating the user and information that was updated</td>
                 </tr>
                 <tr>
                     <td>Allow users to add a movie to their list of favorites</td>
-                    <td>/users/[UserName]/movies/[MovieName]</td>
+                    <td>/users/[id]/[MovieName]</td>
                     <td>Post</td>
+                    <td>:id, :MovieName</td>
+                    <td>A JSON object holding data about the user and the movie added, structured like this { "name" : John/Jane Doe, "moviename" : "noir-tastic" }</td>
                     <td>A JSON object holding data about the user and the movie added, structured like this { "name" : John/Jane Doe, "moviename" : "noir-tastic" }</td>
                 </tr>
                 <tr>
                     <td>Allow users to remove a movie from their list of favorites</td>
-                    <td>/users/[UserName]/movies/[MovieName]</td>
+                    <td>/users/[id]/[MovieName]</td>
                     <td>DELETE</td>
+                    <td>:id, :MovieName</td>
+                    <td>None</td>
                     <td>A text message indicating whether the movie was successfully removed</td>
                 </tr>
                 <tr>
                     <td>Allow existing users to deregister</td>
                     <td>/users/[UserName]/[ID]</td>
                     <td>DELETE</td>
+                    <td>:UserName, :id</td>
+                    <td>None</td>
                     <td>A text message indicating whether the user was successfully removed</td>
                 </tr>
             </tbody>
