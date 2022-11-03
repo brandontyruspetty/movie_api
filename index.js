@@ -63,6 +63,8 @@ let myTopNoirMovies = [
     },
     {
         title: 'Se7en',
+        genre: 'Neo-Noir',
+        description: 'Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.',
         director: 'David Fincher',
         writer: 'Andrew Kevin Walker',
         imageUrl: 'https://s3.amazonaws.com/static.rogerebert.com/uploads/movie/movie_poster/seven-1995/large_mhFXxB76LVgJBIfJM1sAuVBtVKv.jpg'
