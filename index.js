@@ -15,7 +15,7 @@ let users = [
     }
 ];
 
-let myTopNoirMovies = [
+let movies = [
     {
         title: 'The Big Sleep',
         director: 'Howard Hawks',
@@ -88,8 +88,9 @@ app.get('/movies', (req, res) => {
     // res.send('Successful GET request returning data on all movies')
     res.send(myTopNoirMovies)
 });
-app.get('/movies/:MovieName', (req, res) => {
-    res.send('Successful GET request returns data on a single movie by title to user')
+app.get('/movies/:title', (req, res) => {
+    res.json(movies.find( (movie) => 
+    { return movie.title === req.params.title }));
 });
 app.get('/genre/:GenreName', (req, res) => {
     res.send('Successful GET request returns data on a specific genre by name')
