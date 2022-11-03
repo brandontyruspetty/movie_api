@@ -7,6 +7,14 @@ const app = express();
 
 app.use(bodyParser.json());
 
+let users = [
+    {
+        id: 1,
+        name: 'Brandon',
+        favoriteMovies: []
+    }
+];
+
 let myTopNoirMovies = [
     {
         title: 'The Big Sleep',
@@ -57,6 +65,7 @@ let myTopNoirMovies = [
         title: 'Se7en',
         director: 'David Fincher',
         writer: 'Andrew Kevin Walker',
+        imageUrl: 'https://s3.amazonaws.com/static.rogerebert.com/uploads/movie/movie_poster/seven-1995/large_mhFXxB76LVgJBIfJM1sAuVBtVKv.jpg'
     },
 ];
 //added morgan for logging requests
@@ -74,15 +83,16 @@ app.get('/', (req, res) => {
 
 //REST Requests/Responses
 app.get('/movies', (req, res) => {
-    res.send('Successful GET request returning data on all movies')
+    // res.send('Successful GET request returning data on all movies')
+    res.send(myTopNoirMovies)
 });
-app.get('/movie/:MovieName', (req, res) => {
+app.get('/movies/:MovieName', (req, res) => {
     res.send('Successful GET request returns data on a single movie by title to user')
 });
-app.get('/movies/genre/:GenreName', (req, res) => {
+app.get('/genre/:GenreName', (req, res) => {
     res.send('Successful GET request returns data on a specific genre by name')
 });
-app.get('/movies/:Director', (req, res) => {
+app.get('/director/:Director', (req, res) => {
     res.send('Successful GET request returns data on a director by name')
 });
 app.post('/users', (req, res) => {
@@ -93,19 +103,19 @@ app.post('/users', (req, res) => {
     } else {
     newUser.id = uuid.v4();
        users.push(newUser);
-       res.status(201).send(message)
+       res.status(201).json(newUser)
         }
     });
 app.put('/users/:UserName', (req, res) => {
     res.send('Successful PUT request allows users to update their user info')
 });
-app.post('/users/:UserName/movie/:MovieName', (req, res) => {
-    res.send('Successful POST request returns data on user and movie added to list')
+app.post('/users/:id/:MovieName', (req, res) => {
+    res.send('Successful POST request returns data on user and movie added to favorites list')
 });
-app.delete('/users/:Username/movies/:MovieName', (req, res) => {
+app.delete('/users/:id/:MovieName', (req, res) => {
     res.send('Successful DELETE request returns a text alerting user movie has been removed from list')
 });
-app.delete('/users/:UserName/:ID', (req, res) => {
+app.delete('/users/:id', (req, res) => {
     res.send('Successful DELETE request sends text alerting user their account has been deleted')
 });
 
