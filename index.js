@@ -10,74 +10,12 @@ const Users = Models.User;
 
 const app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true }));
+
 mongoose.connect('mongodb://localhost:27017/myNoirMovies', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-app.use(bodyParser.json());
-
-let users = [
-    {
-        id: 1,
-        name: 'Brandon',
-        favoriteMovies: []
-    }
-];
-
-let movies = [
-    {
-        title: 'The Big Sleep',
-        director: 'Howard Hawks',
-        writers: 'William Faulkner, ' + 'Leigh Brackett, ' + 'Jules Furthman'
-    },
-    {
-        title: 'The Third Man',
-        director: 'Carol Reed',
-        writer: 'Graham Greene',
-    },
-    {
-        title: 'Touch of Evil',
-        director:'Orson Welles',
-        writers: 'Orson Welles,' + 'Whit Masterson',
-    },
-    {
-        title: 'Drive',
-        director: 'Nicholas Winding Refn',
-        writers: 'Hossein Amini, ' + 'James Sallis',
-    },
-    {
-        title: 'Le Samourai',
-        director: 'Jean-Pierre Melville',
-        writers: 'Jean-Pierre Melville, ' + 'Georges Pellegrin',
-    },
-    {
-        title: 'Le Cercle Rouge',
-        director: 'Jean-Pierre Melville',
-        writer: 'Jean-Pierre Melville'
-    },
-    {
-        title: 'No Country For Old Men',
-        directors: 'Joel Cohen, ' + 'Ethan Cohen',
-        writers: 'Joel Cohen, ' + 'Ethan Cohen, ' + 'Cormac McCarthy',
-    },
-    {
-        title: 'In A Lonely Place',
-        director: ' Nicholas Ray',
-        writers: 'Andrew Solt, ' + 'Edmund H. North, ' + 'Dorothy B. Hughes',
-    },
-    {
-       title: 'Croupier',
-       director: 'Mike Hodges',
-       writer: 'Paul Mayersberg', 
-    },
-    {
-        title: 'Se7en',
-        genre: 'Neo-Noir',
-        description: 'Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.',
-        director: 'David Fincher',
-        writer: 'Andrew Kevin Walker',
-        imageUrl: 'https://s3.amazonaws.com/static.rogerebert.com/uploads/movie/movie_poster/seven-1995/large_mhFXxB76LVgJBIfJM1sAuVBtVKv.jpg'
-    },
-];
 //added morgan for logging requests
 app.use(morgan('common'));
 
@@ -86,48 +24,171 @@ app.get('/', (req, res) => {
     res.send('Welcome to my unusual and lesser known film noir favorites. Enjoy.');
 });
 
-//Get requests that return a JSON of movie data
-//app.get('/movies', (req, res) => {
-    //res.send(myTopNoirMovies);
-//});
-
-//REST Requests/Responses
+//GET a list of all movies to the user
+/*Expect a return of a json object containing data on movies*/
 app.get('/movies', (req, res) => {
-    // res.send('Successful GET request returning data on all movies')
-    res.send(myTopNoirMovies)
+    Movies.find()
+    .then((movies) => {
+        res.status(201).json(movies);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
-app.get('/movies/:title', (req, res) => {
-    res.json(movies.find( (movie) => 
-    { return movie.title === req.params.title }));
+
+//GET data about a single movie by title
+/* Expect a return of json object containing data on single movie */
+app.get('/movies/:Title', (req, res) => {
+    Movies.findOne({ Movies: req.params.Movies })
+    .then((movie) => {
+        res.json(movie);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
-app.get('/genre/:GenreName', (req, res) => {
-    res.send('Successful GET request returns data on a specific genre by name')
+
+//Get data about a genre by name/title
+/*Expect a return of a json object containing data on a single genre by title */
+app.get('/movies/:Genre/:genreName', (req, res) => {
+    Movies.findOne({ 'Genre.Name': req.params.genreName })
+    .then((movie) => {
+        res.json(movie)
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + err);
+    });
 });
-app.get('/director/:Director', (req, res) => {
-    res.send('Successful GET request returns data on a director by name')
+
+//GET data about a diretor by name
+/*Expect a return of JSON object containing data about director*/
+app.get('movies/:Director/:directorName', (req, res) => {
+    Movies.findOne({ 'Director.Name': req.params.directorName })
+    .then((movie) => {
+        res.json(movie)
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + err)
+    });
 });
+
+//Add a user
+/* Expect JSON in this format
+{
+    ID: Integer, 
+    Username: String,
+    Password: String,
+    Email: String,
+    Birthday: Date
+}*/
 app.post('/users', (req, res) => {
-    let newUser = req.body;
-    if (!newUser.name) {
-        const message = 'Missing "name" in request body';
-        res.status(400).send(message);
+    Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+        if (user){
+            return res.status(400).send(req.body.Username + 'already exists');
+            } else{ 
+                Users
+                .create({
+                    Username: req.body.Username,
+                    Password: req.body.Password,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                })
+                .then((user) => {res.status(201).json(user) })
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).send('Error:' + error);
+                })
+            }
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error:' + error);
+    });
+});
+
+//Allow users to update their user info by username
+/*Expect JSON in this format
+{
+    Username: String,
+    (required)
+    Password: String,
+    (required)
+    Email: String,
+    (required)
+    Birthday: Date
+} */
+app.put('users/:Username', (req, res) => {
+    Users.findOneAndUpdate({ Username: req.params.Username }, {$set:
+    {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+    }
+},
+{ new: true }, 
+(err, updatedUser) => {
+    if (err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
     } else {
-    newUser.id = uuid.v4();
-       users.push(newUser);
-       res.status(201).json(newUser)
+        res.json(updatedUser);
+    }
+    });
+});
+
+//Allow users to add a movie to their list of favorites
+app.post('users/:Username/movies/:MovieID', (req, res) => { 
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+        $push: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true },
+    (err, updatedUser) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
         }
     });
-app.put('/users/:UserName', (req, res) => {
-    res.send('Successful PUT request allows users to update their user info')
 });
-app.post('/users/:id/:MovieName', (req, res) => {
-    res.send('Successful POST request returns data on user and movie added to favorites list')
-});
-app.delete('/users/:id/:MovieName', (req, res) => {
-    res.send('Successful DELETE request returns a text alerting user movie has been removed from list')
-});
-app.delete('/users/:id', (req, res) => {
-    res.send('Successful DELETE request sends text alerting user their account has been deleted')
+
+//Allow users to remove a movie from list of favorites
+app.delete('users/:Username/movies/MovieID', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username }, {
+        $pull: { FavoriteMovies: req.params.MovieID }
+    },
+    { new: true},
+    (err, updatedUser) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        } else {
+            res.json(updatedUser);
+        }
+    });
+});   
+
+
+//Allow existing users to deregister
+app.delete('users/:Username', (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+        if (!user) {
+            res.status(400).send(req.params.Username + ' was not found');
+        } else {
+            res.status(200).send(req.params.Username + ' was deleted.');
+        }
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
 //added express.static to access documentation.html
