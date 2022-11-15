@@ -36,15 +36,15 @@
                 </tr>
                 <tr>
                     <td>Return data about a single movies by title to the user</td>
-                    <td>/movies/[MovieName]</td>
+                    <td>/movies/:Title</td>
                     <td>GET</td>
-                    <td>:MovieName</td>
+                    <td>:Title</td>
                     <td>None</td>
                     <td>A JSON object holding data about a single movie containing a description, genre, director and image URL</td>
                 </tr>
                 <tr>
                     <td>Return data about a genre (description) by name (e.g., "Contemporary Noir")</td>
-                    <td>/movie/[Genre]/[GenreName]</td>
+                    <td>/movie/genre/:genreName</td>
                     <td>GET</td>
                     <td>:GenreName</td>
                     <td>None</td>
@@ -52,7 +52,7 @@
                 </tr>
                 <tr>
                     <td>Return data about a director (bio, birth year, death year) by name</td>
-                    <td>/movies/[Director]</td>
+                    <td>/movies/directors/:directorName</td>
                     <td>GET</td>
                     <td>:Director</td>
                     <td>None</td>
@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td>Allow users to update their user info (username, password, email, date of birth)</td>
-                    <td>/users/[UserName]</td>
+                    <td>/users/:UserName</td>
                     <td>PUT</td>
                     <td>:UserName</td>
                     <td>None</td>
@@ -76,23 +76,23 @@
                 </tr>
                 <tr>
                     <td>Allow users to add a movie to their list of favorites</td>
-                    <td>/users/[id]/[MovieName]</td>
+                    <td>/users/:Username/movies/:MovieID</td>
                     <td>Post</td>
-                    <td>:id, :MovieName</td>
+                    <td>:Username, :MovieID</td>
                     <td>A JSON object holding data about the user and the movie added, structured like this { "name" : John/Jane Doe, "moviename" : "noir-tastic" }</td>
                     <td>A JSON object holding data about the user and the movie added, structured like this { "name" : John/Jane Doe, "moviename" : "noir-tastic" }</td>
                 </tr>
                 <tr>
                     <td>Allow users to remove a movie from their list of favorites</td>
-                    <td>/users/[id]/[MovieName]</td>
+                    <td>/users/:Username/movies/:MovieID</td>
                     <td>DELETE</td>
-                    <td>:id, :MovieName</td>
+                    <td>:Username, :MovieID</td>
                     <td>None</td>
                     <td>A text message indicating whether the movie was successfully removed</td>
                 </tr>
                 <tr>
                     <td>Allow existing users to deregister</td>
-                    <td>/users/[UserName]/[ID]</td>
+                    <td>/users/:Username</td>
                     <td>DELETE</td>
                     <td>:UserName, :id</td>
                     <td>None</td>
