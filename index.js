@@ -13,6 +13,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true }));
 
+//Import authorization and JWT
+let auth = require('./auth')(app);
+
 mongoose.connect('mongodb://localhost:27017/myNoirMovies', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
