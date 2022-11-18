@@ -16,6 +16,10 @@ app.use(bodyParser.urlencoded({extended: true }));
 //Import authorization and JWT
 let auth = require('./auth')(app);
 
+//Importing Passport
+const passport = require('passport');
+require('./passport');
+
 mongoose.connect('mongodb://localhost:27017/myNoirMovies', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
