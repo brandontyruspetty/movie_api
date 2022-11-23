@@ -3,12 +3,15 @@ morgan = require('morgan');
 bodyParser = require('body-parser');
 uuid = require('uuid');
 
+const { check, validationResult } = require('express-validator');
+
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
 const app = express();
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true }));
@@ -111,7 +114,26 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
     Email: String,
     Birthday: Date
 }*/
-app.post('/users', (req, res) => {
+app.post('/users', 
+// Validation logic here for request
+//you can either use a chain of methods like .not().isEmpty
+//which means "opposite of isEmpty" in plain english "is not empty"
+//or use .isLength({min: 5}) which means
+//minimum value of 5 characters are only allowed
+[
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters -  not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+    // check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array()
+        });
+    }
+
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username }) //Search to see if a user with the requested username already exists
     .then((user) => {
