@@ -1,0 +1,3 @@
+mongoimport --uri mongodb+srv://brandon_petty:Halcy9Nadmin@mynoirmoviesdb.tftsth6.mongodb.net/myNoirMoviesDB --collection movies --type json --file myNoirMoviesMongoDB.json
+mongosh "mongodb+srv://mynoirmoviesdb.tftsth6.mongodb.net/myNoirMoviesDB" --apiVersion 1 --username brandon_petty
+
