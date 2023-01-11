@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 
 //GET a list of all movies to the user
 /*Expect a return of a json object containing data on movies*/
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
     .then((movies) => {
         res.status(201).json(movies);
