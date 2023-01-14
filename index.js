@@ -20,9 +20,9 @@ app.use(bodyParser.urlencoded({extended: true }));
 const cors = require('cors');
 app.use(cors());
 
- let allowedOrigins = ['http://localhost:1234', 'http://testsite.com'];
+ //let allowedOrigins = ['http://localhost:1234', 'http://testsite.com'];
 
- app.use(cors({
+ /*app.use(cors({
      origin: (origin, callback) => {   
             if(!origin) return callback(null, true);
          if(allowedOrigins.indexOf(origin) === -1){
@@ -32,7 +32,7 @@ app.use(cors());
          }
          return callback(null, true);
      }
- }));
+ }));*/
 
 
 //Import authorization and JWT
