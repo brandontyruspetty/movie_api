@@ -258,6 +258,19 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
         res.status(500).send('Error: ' + err);
     });
 });
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+  .then((user) => {
+    if (!user) {
+        return res.status(404).send()
+    }
+    res.json(user);
+  })
+  .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+  });
+});
 
 //added express.static to access documentation.html
 app.use(express.static('public'));
