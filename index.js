@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: true }));
 const cors = require('cors');
 app.use(cors());
 
- let allowedOrigins = ['http://localhost:1234', 'https://mynoirmovies.herokuapp.com/', 'https://mynoirmovies.netlify.app'];
+ let allowedOrigins = ['http://localhost:1234', 'http://localhost:4200', 'https://mynoirmovies.herokuapp.com/', 'https://mynoirmovies.netlify.app'];
 
  app.use(cors({
      origin: (origin, callback) => {   
