@@ -68,8 +68,8 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 
 //GET data about a single movie by title
 /* Expect a return of json object containing data on single movie */
-app.get('/movies/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Movies.findOne({ Title: req.params.title })
+app.get('/movies/:movieId', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Movies.findOne({ _id: req.params.movieId })
     .then((movie) => {
         res.status(201).json(movie);
     })
