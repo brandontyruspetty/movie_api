@@ -25,7 +25,7 @@ app.use(cors());
   'http://localhost:4200',
   'https://mynoirmovies.herokuapp.com/',
   'https://mynoirmovies.netlify.app',
-  'https://brandontyruspetty.github.io/myNoirMovies-Angular-client',
+  'https://brandontyruspetty.github.io',
 
 ];
 
