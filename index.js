@@ -16,7 +16,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true }));
 
-//Added CORS
+/** 
+ * Added CORS for allowed domanins
+ */
 const cors = require('cors');
 app.use(cors());
 
@@ -42,7 +44,7 @@ app.use(cors());
  }));
 
 
-//Import authorization and JWT
+ //Import authorization and JWT
 let auth = require('./auth')(app);
 
 //Importing Passport
@@ -55,13 +57,25 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 //added morgan for logging requests
 app.use(morgan('common'));
 
-//Get Requests that return a text response
+/**
+ * GET requests that return a welcom text response from '/' endpoint
+ * @name welcomeMessage
+ * @kind function
+ * @returns welcome message
+ */ 
 app.get('/', (req, res) => {
     res.send('Welcome to my unusual and lesser known film noir favorites. Enjoy.');
 });
 
-//GET a list of all movies to the user
-/*Expect a return of a json object containing data on movies*/
+/** 
+ * GET a list of all movies to the user
+* Request body: Bearer token
+* @name getAllMovies
+* @kind function
+* @returns array of movie objects
+* @requires passport
+*/
+
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
     .then((movies) => {
@@ -73,8 +87,15 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
     });
 });
 
-//GET data about a single movie by title
-/* Expect a return of json object containing data on single movie */
+/**
+ * GET data about a single movie by title
+ * Request body: Bearer token
+ * @name getMovie 
+ * @kind function
+ * @param _id
+ * @returns json movie object
+ * @requires passport
+*/
 app.get('/movies/:movieId', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({ _id: req.params.movieId })
     .then((movie) => {
@@ -86,8 +107,15 @@ app.get('/movies/:movieId', passport.authenticate('jwt', { session: false }), (r
     });
 });
 
-//Get data about a genre by name/title
-/*Expect a return of a json object containing data on a single genre by title */
+/** 
+ * GET data about a genre by name
+ * Request body: Bearer token
+ * @name getGenre
+ * @kind function
+ * @param Name
+ * @returns json genre object
+ * @requires passport
+*/
 app.get('/movies/genre/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({ 'Genre.Name': req.params.Name })
     .then((movies) => {
@@ -99,8 +127,15 @@ app.get('/movies/genre/:Name', passport.authenticate('jwt', { session: false }),
     });
 });
 
-//GET data about a director by name
-/*Expect a return of JSON object containing data about director*/
+/**
+ * GET data about a director by name
+ * Request body: Bearer token
+ * @name getDirector
+ * @kind function
+ * @param Name
+ * @returns json director object
+ * @requires passport
+*/
 app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({ 'Director.Name': req.params.Name })
     .then((movies) => {
@@ -112,21 +147,21 @@ app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false
     });
 });
 
-//Add a user
-/* Expect JSON in this format
-{
-    ID: Integer, 
-    Username: String,
-    Password: String,
-    Email: String,
-    Birthday: Date
-}*/
+/**
+ * POST a new user. Username, password, and email are all required fields
+ * Request body: Bearer token
+* {
+*  ID: Integer, 
+*  Username: String,
+*  Password: String,
+*  Email: String,
+*  Birthday: Date
+*  }
+* @name createUser
+* @kind function
+* @returns json user object
+*/
 app.post('/users', 
-// Validation logic here for request
-//you can either use a chain of methods like .not().isEmpty
-//which means "opposite of isEmpty" in plain english "is not empty"
-//or use .isLength({min: 5}) which means
-//minimum value of 5 characters are only allowed
 [
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters -  not allowed.').isAlphanumeric(),
@@ -168,17 +203,20 @@ app.post('/users',
     });
 });
 
-//Allow users to update their user info by username
-/*Expect JSON in this format
-{
-    Username: String,
-    (required)
-    Password: String,
-    (required)
-    Email: String,
-    (required)
-    Birthday: Date
-} */
+/**
+ * PUT updated user info by username
+ * {
+ * Username: String, (required)
+ * Password: String, (required)
+ * Email: String, (required)
+ * Birthday: Date
+ * }
+ * @name updatedUser
+ * @kind function
+ * @param Username
+ * @returns json user object
+ * @requires passport 
+ */
 app.put('/users/:Username', 
 [
     check('Username', 'Username is required').isLength({min: 5}),
@@ -217,7 +255,16 @@ app.put('/users/:Username',
     });
 });
 
-//Allow users to add a movie to their list of favorites
+/**
+ * POST a movie to a user's list of favorites
+ * Request body: Bearer token
+ * @name addToFavorites
+ * @kind function
+ * @param Username
+ * @param MovieID
+ * @returns json user object
+ * @requires passport
+ */
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => { 
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $push: { FavoriteMovies: req.params.MovieID }
@@ -233,7 +280,16 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
     });
 });
 
-//Allow users to remove a movie from list of favorites
+/**
+ * Allow users to DELETE a movie from list of favorites
+ * Request body: Bearer token
+ * @name deleteFavorite
+ * @kind function
+ * @param Username
+ * @param MovieID
+ * @returns json user object
+ * @requires passort
+*/
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $pull: { FavoriteMovies: req.params.MovieID }
@@ -250,7 +306,15 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 });   
 
 
-//Allow existing users to deregister
+/**
+ * Allow existing users to DELETE account by username
+ * Request body: Bearer token
+ * @name deleteUser
+ * @kind function
+ * @param Username
+ * @returns success message
+ * @requires passport
+ * */
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
